@@ -125,13 +125,22 @@ async def broadcast(websocket: WebSocket):
                            "sdp": peer_connection.localDescription.sdp}}
                 await websocket.send_json(payload)
 
-                @peer_connection.on('icecandidate')
-                async def handle_icecandidate(event):
-                    if event.candidate is not None:
-                        # print("this is ice candidate", event)
-                        await websocket.send_json({'candidate': event.candidate})
+                # sending candidates
+                print("local desc sdp", peer_connection.localDescription.sdp)
+                mkbhd = []
+                for x in peer_connection.localDescription.sdp.split("\r\n"):
+                    if "=candidate" in x:
+                        # the candidates are in the formm a=candidate:..... so i want to reomove the a=
+                        mkbhd.append(x[2:])
+                        # i am also going to pass a fake sdpmid and sdpMLineIndex
+                        _payload = {"data":
+                                    {"type": "candidate",  "candidate": {"candidate": x[2:], "sdpMid": "0", "sdpMLineIndex": 0}}}
+                        await websocket.send_json(_payload)
+
+                print("mkbhd is", mkbhd)
 
             elif data_content["type"] == "candidate":
+                # print(data_content)
                 await peer_connection.addIceCandidate(
                     RTCIceCandidate(**rtc_ice_candidate_arguments(data_content["candidate"])))
                 print("candidate added")
@@ -177,11 +186,19 @@ async def person2(websocket: WebSocket):
                            "sdp": peer_connection.localDescription.sdp}}
                 await websocket.send_json(payload)
 
-                @peer_connection.on('icecandidate')
-                async def handle_icecandidate(event):
-                    if event.candidate is not None:
-                        # print("this is ice candidate", event)
-                        await websocket.send_json({'candidate': event.candidate})
+                # sending candidates
+                print("local desc sdp", peer_connection.localDescription.sdp)
+                giannis = []
+                for x in peer_connection.localDescription.sdp.split("\r\n"):
+                    if "=candidate" in x:
+                        # the candidates are in the formm a=candidate:..... so i want to reomove the a=
+                        giannis.append(x[2:])
+                        # i am also going to pass a fake sdpmid and sdpMLineIndex
+                        _payload = {"data":
+                                    {"type": "candidate",  "candidate": {"candidate": x[2:], "sdpMid": "0", "sdpMLineIndex": 0}}}
+                        await websocket.send_json(_payload)
+
+                print("giannis is", giannis)
 
             elif data_content["type"] == "candidate":
                 await peer_connection.addIceCandidate(

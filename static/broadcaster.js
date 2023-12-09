@@ -13,7 +13,7 @@ var peerConfiguration = {};
     const iceServers = response.data;
     peerConfiguration.iceServers = iceServers
   })();
-  
+
 const sendData = (data) => {
     console.log("sending data");
     const jsonData = JSON.stringify({"data": data});
@@ -60,7 +60,7 @@ const onTrack = (event) => {
 const createPeerConnection = () => {
     try {
         pc = new RTCPeerConnection(peerConfiguration);
-        // pc.onicecandidate = onIceCandidate;
+        pc.onicecandidate = onIceCandidate;
         // pc.ontrack = onTrack;
 
         const localStream = localStreamElement.srcObject;
