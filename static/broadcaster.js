@@ -8,6 +8,12 @@ console.log("This is ws: ", socket)
 
 var peerConfiguration = {};
 
+(async() => {
+    const response = await fetch("https://first-webrtc-app.metered.live/api/v1/turn/credentials?apiKey=df1e4b6b881387c5fb86162344907946ce62");
+    const iceServers = response.data;
+    peerConfiguration.iceServers = iceServers
+  })();
+  
 const sendData = (data) => {
     console.log("sending data");
     const jsonData = JSON.stringify({"data": data});
