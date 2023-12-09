@@ -4,7 +4,7 @@ let localStreamElement = document.getElementById('localStream');
 let remoteStreamElement = document.getElementById('remoteStream');
 let lecturer = true
 let streami;
-socket = new WebSocket(`wss://${window.location.hostname}:8000`);
+socket = new WebSocket(`wss://${window.location.hostname}/viewer`);
 console.log("This is ws: ", socket)
 
 var peerConfiguration = {};
